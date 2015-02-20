@@ -240,7 +240,7 @@ mod impls {
             impl<S: Writer + Hasher> Hash<S> for $ty {
                 #[inline]
                 fn hash(&self, state: &mut S) {
-                    let a: [u8; ::$ty::BYTES] = unsafe {
+                    let a: [u8; ::$ty::BYTES as usize] = unsafe {
                         mem::transmute(*self)
                     };
                     state.write(&a)
@@ -381,7 +381,7 @@ mod impls {
                 }
 
                 fn hash_slice<H: Hasher>(data: &[$ty], state: &mut H) {
-                    let newlen = data.len() * ::$ty::BYTES;
+                    let newlen = data.len() * ::$ty::BYTES as usize;
                     let ptr = data.as_ptr() as *const u8;
                     state.write(unsafe { slice::from_raw_parts(ptr, newlen) })
                 }
